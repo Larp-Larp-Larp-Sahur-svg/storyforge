@@ -1,0 +1,15 @@
+{
+  "name": "storyforge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Feed a novel; one AI scan audits it; a pure-math engine forges an infinite interactive story game. Offline-first PWA.",
+  "type": "module",
+  "scripts": {
+    "start": "python3 -m http.server 8787",
+    "serve": "npx --yes serve -l 8787 .",
+    "deploy": "npx --yes wrangler@latest pages deploy . --project-name storyforge",
+    "forge": "bash ./forge.sh"
+  },
+  "keywords": ["interactive-fiction", "pwa", "rpg", "ai", "offline-first"],
+  "license": "MIT"
+}

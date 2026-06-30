@@ -1,0 +1,5 @@
+# Cloudflare Pages config for StoryForge (static PWA).
+# Deploy with:  npx wrangler pages deploy . --project-name storyforge
+name = "storyforge"
+pages_build_output_dir = "."
+compatibility_date = "2025-01-01"

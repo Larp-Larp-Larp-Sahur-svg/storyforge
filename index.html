@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0b0b0b" media="(prefers-color-scheme: dark)" />
+<title>StoryForge — Novel to Interactive Game</title>
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="icon" href="assets/icon.svg" />
+<link rel="apple-touch-icon" href="assets/icon.svg" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div id="toast" class="toast"></div>
+
+<!-- ===================== LIBRARY (home) ===================== -->
+<section id="library" class="screen">
+  <header class="bar lib-bar">
+    <h1 class="brand">
+      <svg class="logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10.5 5 8 4.5 4 4.5V18c4 0 6.5.5 8 2 1.5-1.5 4-2 8-2V4.5c-4 0-6.5.5-8 2Z"/><path d="M12 6.5V20"/></svg>
+      StoryForge
+    </h1>
+    <div class="bar-actions">
+      <button id="installBtn" class="btn ghost sm hidden" title="Install app"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3v12M8 11l4 4 4-4M4 21h16"/></svg><span class="lbl">Install</span></button>
+      <button id="settingsBtn" class="btn ghost sm" title="Settings" aria-label="Settings"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 13a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2V21a2 2 0 1 1-4 0v-.1A1.7 1.7 0 0 0 7 19.4a1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9H1a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 2.6 7a1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.7 1.7 0 0 0 7 2.6h.1A1.7 1.7 0 0 0 9 1V1a2 2 0 1 1 4 0v.1A1.7 1.7 0 0 0 17 2.6a1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0 1.2 2.9H23a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1.9Z"/></svg><span class="lbl">Settings</span></button>
+      <label class="btn ghost sm" title="Import a story"><svg class="icon" viewBox="0 0 24 24"><path d="M12 21V9M7 14l5-5 5 5M5 3h14"/></svg><span class="lbl">Import</span><input id="importStoryFile" type="file" accept=".json" hidden /></label>
+      <button id="newStoryBtn" class="btn primary sm"><svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span class="lbl">New story</span></button>
+    </div>
+  </header>
+  <input id="libSearch" type="text" placeholder="Search your stories…" class="lib-search" />
+  <div id="storyGrid" class="story-grid"></div>
+  <div id="libEmpty" class="empty hidden">
+    <svg class="empty-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10.5 5 8 4.5 4 4.5V18c4 0 6.5.5 8 2 1.5-1.5 4-2 8-2V4.5c-4 0-6.5.5-8 2Z"/><path d="M12 6.5V20"/></svg>
+    <p>No stories yet. Forge your first world from any novel.</p>
+    <button id="newStoryBtn2" class="btn primary">New story</button>
+  </div>
+</section>
+
+<!-- ===================== SETUP / SCAN ===================== -->
+<section id="setup" class="screen hidden">
+  <header class="bar"><button id="setupBack" class="btn ghost sm">← Library</button><h2>New story</h2><span></span></header>
+  <div class="card">
+    <h2>Source novel</h2>
+    <textarea id="novel" placeholder="Paste your story text — or load a .txt / .md / .pdf file below…"></textarea>
+    <div class="row">
+      <label class="btn ghost"><svg class="icon" viewBox="0 0 24 24"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/></svg>Load file<input id="novelFile" type="file" accept=".txt,.md,.markdown,.pdf,text/plain,application/pdf" hidden /></label>
+      <button id="sampleBtn" class="btn ghost"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg>Sample</button>
+    </div>
+    <p class="note">Accepts .txt, .md and .pdf. PDFs are read in your browser (text extracted on-device).</p>
+  </div>
+  <div class="card">
+    <h2>AI engine <span class="muted">· one-time scan</span></h2>
+    <label>Provider</label>
+    <select id="provider"></select>
+    <p id="provNote" class="note"></p>
+    <div class="grid2">
+      <div><label>Endpoint base</label><input id="base" type="text" /></div>
+      <div><label>Model</label><input id="model" type="text" /></div>
+    </div>
+    <div id="keyRow"><label>API key <span class="muted">· stored only in your browser</span></label><input id="apiKey" type="password" placeholder="paste key…" /></div>
+    <details class="pool"><summary>Add more keys · rotation pool (stack free quotas)</summary>
+      <p class="note">One key per line. Formats: <code>key</code> — or <code>model , key</code> — or <code>base , model , key</code>. StoryForge rotates across every key and auto-skips any that hit a rate limit.</p>
+      <textarea id="keyPool" class="mono pool-ta" placeholder="glm-4-flash , second-glm-key&#10;https://api.groq.com/openai/v1 , llama-3.3-70b-versatile , groq-key"></textarea>
+    </details>
+    <div class="grid2">
+      <div><label>Creativity</label><input id="temp" type="number" step="0.1" min="0" max="1.5" /></div>
+      <div><label>Length per turn <span class="muted">· token cost</span></label><select id="length"></select></div>
+    </div>
+    <div class="grid2">
+      <div><label>Difficulty</label><select id="difficulty"><option value="story">Story (forgiving)</option><option value="normal" selected>Normal</option><option value="brutal">Brutal</option></select></div>
+      <div><label>Seed <span class="muted">· optional</span></label><input id="seed" type="text" placeholder="auto" /></div>
+    </div>
+  </div>
+  <button id="scanBtn" class="btn primary big">Audit &amp; Forge</button>
+  <div id="scanLog" class="scanlog hidden"><span class="spin"></span><span id="scanLogText">Scanning…</span></div>
+</section>
+
+<!-- ===================== AUDIT REPORT ===================== -->
+<section id="audit" class="screen hidden">
+  <header class="bar"><button id="backSetup" class="btn ghost sm">← Source</button><h2>Scan audit</h2><span></span></header>
+  <div class="card">
+    <div class="cover"><div class="bar-track"><div id="coverBar" class="bar-fill"></div></div><span id="coverPct">0%</span></div>
+    <div id="verdict" class="verdict"></div>
+    <h2 id="auditTitle"></h2>
+    <p id="auditLog" class="muted"></p>
+    <div id="auditStats" class="chips"></div>
+    <div id="auditCounts" class="counts"></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Found</h3><ul id="foundList" class="list"></ul></div>
+    <div class="card"><h3>Gaps / inferred</h3><ul id="missList" class="list"></ul></div>
+  </div>
+  <details class="card"><summary>Story bible (editable JSON)</summary><textarea id="bibleJson" class="mono"></textarea></details>
+  <div class="row">
+    <button id="rescanBtn" class="btn ghost">Re-scan</button>
+    <button id="forgeBtn" class="btn primary big">Forge &amp; Play</button>
+  </div>
+</section>
+
+<!-- ===================== PLAY ===================== -->
+<section id="play" class="screen hidden">
+  <header class="bar play-bar">
+    <button id="menuBtn" class="btn ghost sm" aria-label="Library"><svg class="icon" viewBox="0 0 24 24"><path d="M3 12l9-9 9 9M5 10v10h14V10"/></svg></button>
+    <div class="hud-mini"><b id="hudName"></b> · <span id="hudLoc"></span> · <span id="hudLevel"></span> · <span id="hudTurn"></span></div>
+    <div class="play-tools">
+      <button id="rewindBtn" class="btn ghost sm" aria-label="Rewind" title="Undo last turn"><svg class="icon" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></svg></button>
+      <button id="codexBtn" class="btn ghost sm" aria-label="Codex" title="World codex"><svg class="icon" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM19 17H6"/></svg></button>
+      <button id="statsToggle" class="btn ghost sm" aria-label="Stats"><svg class="icon" viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-6"/></svg></button>
+    </div>
+  </header>
+  <div class="play-grid">
+    <main class="story">
+      <div id="storyLog" class="log"></div>
+      <div id="gmStatus" class="gmstatus"></div>
+      <div id="spinner" class="spinner hidden"><span class="spin"></span> the world responds…</div>
+      <div id="choices" class="choices"></div>
+      <form id="freeForm" class="free-form"><input id="freeInput" type="text" placeholder="…or type your own action" /><button class="btn ghost sm" type="submit">Act</button></form>
+    </main>
+    <aside id="sidebar" class="sidebar">
+      <div class="vital"><div class="vital-row"><span>HP</span><span id="hpText"></span></div><div class="bar-track sm"><div id="hpFill" class="bar-fill"></div></div></div>
+      <div class="vital"><div class="vital-row"><span>XP</span><span id="xpText"></span></div><div class="bar-track sm"><div id="xpFill" class="bar-fill"></div></div></div>
+      <h4>Attributes</h4><div id="statBlock" class="statblock"></div>
+      <div id="pointsBlock"></div>
+      <h4>Quests</h4><div id="questBlock"></div>
+      <h4>Conditions</h4><div id="condBlock" class="chips"></div>
+      <h4>Inventory · <span id="goldBlock" class="muted"></span></h4><div id="invBlock" class="chips"></div>
+      <h4>Bonds</h4><div id="relBlock"></div>
+      <h4>Places visited</h4><div id="placeBlock" class="chips"></div>
+      <h4>Journey</h4><div id="journeyBlock"></div>
+      <h4>Tokens</h4><div id="tokBlock"></div>
+      <div class="saverow">
+        <button id="exportBtn" class="btn ghost sm"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Export</button>
+        <button id="saveAsBtn" class="btn ghost sm"><svg class="icon" viewBox="0 0 24 24"><path d="M5 3h11l3 3v15H5zM8 3v5h7M8 21v-7h8v7"/></svg>Save slot</button>
+        <button id="newRunBtn" class="btn ghost sm"><svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>New run</button>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ===================== OVERLAYS ===================== -->
+<div id="codex" class="drawer hidden">
+  <div class="drawer-panel">
+    <header class="bar"><h2>World Codex</h2><button id="codexClose" class="btn ghost sm">Close</button></header>
+    <div id="codexBody" class="codex-body"></div>
+  </div>
+</div>
+
+<div id="bakeModal" class="modal hidden">
+  <div class="modal-panel">
+    <header class="bar"><h2>Bake offline story</h2><button id="bakeClose" class="btn ghost sm">Close</button></header>
+    <p class="note">Pre-generates a whole branching gamebook — lots of choices, many endings — so it then plays with <b>zero network and zero further tokens</b>. Bigger = more branches, more tokens, longer bake. One story at a time.</p>
+    <label>Story size</label>
+    <select id="bakeSize"><option value="30">Small · ~30 nodes</option><option value="60" selected>Medium · ~60 nodes</option><option value="120">Large · ~120 nodes</option><option value="200">Epic · ~200 nodes</option></select>
+    <div id="bakeProgress" class="hidden" style="margin-top:14px"><div class="bar-track"><div id="bakeBar" class="bar-fill"></div></div><p id="bakeLog" class="note"></p></div>
+    <button id="bakeStart" class="btn primary big">Start baking</button>
+  </div>
+</div>
+
+<div id="settingsModal" class="modal hidden">
+  <div class="modal-panel">
+    <header class="bar"><h2>Settings</h2><button id="settingsClose" class="btn ghost sm">Close</button></header>
+    <label>Provider</label><select id="s_provider"></select>
+    <p id="s_note" class="note"></p>
+    <div class="grid2"><div><label>Endpoint base</label><input id="s_base" type="text" /></div><div><label>Model</label><input id="s_model" type="text" /></div></div>
+    <div id="s_keyRow"><label>API key</label><input id="s_apiKey" type="password" placeholder="paste key…" /></div>
+    <details class="pool"><summary>Rotation pool keys</summary><textarea id="s_keyPool" class="mono pool-ta" placeholder="model , key  (one per line)"></textarea></details>
+    <div class="grid2"><div><label>Length per turn</label><select id="s_length"></select></div><div><label>Difficulty (new runs)</label><select id="s_diff"><option value="story">Story</option><option value="normal">Normal</option><option value="brutal">Brutal</option></select></div></div>
+    <div class="grid2"><div><label>Context size <span class="muted">· tokens</span></label><select id="s_depth"><option value="full">Full (richest)</option><option value="lean">Lean (cheaper)</option></select></div><div><label>Theme</label><select id="s_theme"><option value="auto">Auto (system)</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div>
+    <label class="check"><input type="checkbox" id="s_eco" /> Economy mode — shortest replies, fewest tokens</label>
+    <button id="settingsSave" class="btn primary big">Save settings</button>
+    <button id="forceUpdate" class="btn ghost sm" style="width:100%;margin-top:8px">Force update · clear cache &amp; reload</button>
+  </div>
+</div>
+
+<div id="runsModal" class="modal hidden">
+  <div class="modal-panel">
+    <header class="bar"><h2 id="runsTitle">Save slots</h2><button id="runsClose" class="btn ghost sm">Close</button></header>
+    <div id="runsList" class="runs-list"></div>
+    <button id="runsNew" class="btn primary">Start a new run</button>
+  </div>
+</div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
